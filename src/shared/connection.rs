@@ -647,6 +647,12 @@ impl<R: RateLimiter, M: PacketModifier> Connection<R, M> {
         self.state = ConnectionState::Closing;
     }
 
+    /// Request that we re-try connection.
+    pub fn reconnect(&mut self) { if !self.open() {
+        self.last_receive_time = Instant::now();
+        self.state = ConnectionState::Connecting}
+    }
+
 
     // Internal State Handling ------------------------------------------------
 
