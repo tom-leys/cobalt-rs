@@ -36,7 +36,6 @@ fn main() {
                         conn.peer_addr(),
                         conn.rtt()
                     );
-
                 },
                 ServerEvent::Message(id, message) => {
                     let conn = server.connection(&id).unwrap();

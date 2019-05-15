@@ -147,6 +147,10 @@ impl<S: Socket, R: RateLimiter, M: PacketModifier> Server<S, R, M> {
         self.local_address.ok_or_else(|| Error::new(ErrorKind::AddrNotAvailable, ""))
     }
 
+    /// True iff previous ticks took too long and now we are trying to catch up.
+    ///   You might use this to hint that you should do less work for now.
+    pub fn tick_recovering(&self) -> bool { self.ticker.in_recovery() }
+
     /// Returns a mutable reference to the specified client connection.
     pub fn connection(&mut self, id: &ConnectionID) -> Result<&mut Connection<R, M>, Error> {
         if self.socket.is_some() {
@@ -350,6 +354,9 @@ impl<S: Socket, R: RateLimiter, M: PacketModifier> Server<S, R, M> {
 
             let connection = self.connections.get_mut(&id).unwrap();
 
+            // TODO Connection switching is a cute feature, but it could be used to hijack someone
+            //        else's connection - need some sort of verification this is the same client.
+
             // Check if the packet was actually consumed by the connection.
             //
             // If it was, see if the address we received the packet from differs
@@ -362,7 +369,7 @@ impl<S: Socket, R: RateLimiter, M: PacketModifier> Server<S, R, M> {
             // port the connection doesn't end up sending packets into the void.
             if connection.receive_packet(packet) && addr != connection.peer_addr() {
                 connection.set_peer_addr(addr);
-                self.addresses.remove(&id);
+                self.addresses.remove(&id);  // TODO: Should be able to remove this line.
                 self.addresses.insert(id, addr);
             }
 

@@ -90,6 +90,10 @@ impl Ticker {
 
     }
 
+    pub fn in_recovery(&self) -> bool {
+        self.tick_overflow > 1
+    }
+
 }
 
 // Helpers ---------------------------------------------------------------------
