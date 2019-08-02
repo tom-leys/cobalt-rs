@@ -40,7 +40,7 @@ pub trait PacketModifier {
 
 }
 
-impl fmt::Debug for PacketModifier {
+impl fmt::Debug for dyn PacketModifier {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "PacketModifier")
     }

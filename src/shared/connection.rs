@@ -126,7 +126,7 @@ pub struct ConnectionID(pub u32);
 
 
 /// Type alias for connection mappings.
-pub type ConnectionMap = HashMap<ConnectionID, Connection<RateLimiter, PacketModifier>>;
+pub type ConnectionMap = HashMap<ConnectionID, Connection<dyn RateLimiter, dyn PacketModifier>>;
 
 /// Implementation of a reliable, virtual socket connection.
 #[derive(Debug)]
@@ -422,7 +422,7 @@ impl<R: RateLimiter, M: PacketModifier> Connection<R, M> {
                     self.acked_packets = self.acked_packets.wrapping_add(1);
                     self.smoothed_rtt = moving_average(
                         self.smoothed_rtt,
-                        (cmp::max(self.last_receive_time - ack.time, tick_delay) - tick_delay)
+                        cmp::max(self.last_receive_time - ack.time, tick_delay) - tick_delay
                     );
 
                     ack.state = PacketState::Acked;
