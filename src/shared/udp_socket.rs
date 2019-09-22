@@ -33,10 +33,10 @@ impl Socket for UdpSocket {
     ) -> Result<Self, Error> {
 
         // Create the send socket
-        let socket = try!(net::UdpSocket::bind(address));
+        let socket = net::UdpSocket::bind(address)?;
 
         // Switch into non-blocking mode
-        try!(socket.set_nonblocking(true));
+        socket.set_nonblocking(true)?;
 
         // Allocate receival buffer
         let buffer: Vec<u8> = iter::repeat(0).take(max_packet_size).collect();

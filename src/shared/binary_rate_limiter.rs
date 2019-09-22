@@ -164,7 +164,7 @@ impl RateLimiter for BinaryRateLimiter {
     fn reset(&mut self) {
         self.tick = 0;
         self.mode = Mode::Good;
-        self.last_bad_time = Instant::now();;
+        self.last_bad_time = Instant::now();
         self.last_good_time = Instant::now();
         self.good_time_duration = 0;
         self.delay_until_good_mode = MIN_GOOD_MODE_TIME_DELAY;

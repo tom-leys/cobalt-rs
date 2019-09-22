@@ -195,13 +195,13 @@ impl<S: Socket, R: RateLimiter, M: PacketModifier> Client<S, R, M> {
 
         if self.socket.is_none() {
 
-            let socket = try!(S::new(
+            let socket = S::new(
                 "0.0.0.0:0",
                 self.config.packet_max_size
-            ));
+            )?;
 
-            let peer_addr = try!(addr.to_socket_addrs()).nth(0).unwrap();
-            let local_addr = try!(socket.local_addr());
+            let peer_addr = addr.to_socket_addrs()?.nth(0).unwrap();
+            let local_addr = socket.local_addr()?;
 
             self.socket = Some(socket);
             self.peer_address = Some(peer_addr);

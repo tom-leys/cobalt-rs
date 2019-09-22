@@ -204,11 +204,11 @@ impl<S: Socket, R: RateLimiter, M: PacketModifier> Server<S, R, M> {
 
         if self.socket.is_none() {
 
-            let local_addr = try!(addr.to_socket_addrs()).nth(0).unwrap();
-            let socket = try!(S::new(
+            let local_addr = addr.to_socket_addrs()?.nth(0).unwrap();
+            let socket = S::new(
                 local_addr,
                 self.config.packet_max_size
-            ));
+            )?;
 
             self.socket = Some(socket);
             self.local_address = Some(local_addr);
