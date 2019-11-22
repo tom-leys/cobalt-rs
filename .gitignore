@@ -1,3 +1,5 @@
 doc
 target
 Cargo.lock
+
+/.idea/workspace.xml
